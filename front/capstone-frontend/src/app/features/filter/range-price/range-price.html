@@ -1,0 +1,11 @@
+<mat-slider min="0" max="1000" step="10" thumbLabel tickInterval="100">
+  <input
+    matSliderThumb
+    [value]="priceRange"
+    (input)="onPriceChange($event.target.valueAsNumber)">
+</mat-slider>
+
+<div>Max Price: {{ priceRange | currency:'USD' }}</div>
+
+
+

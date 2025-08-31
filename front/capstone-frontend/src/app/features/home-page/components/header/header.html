@@ -1,0 +1,27 @@
+<header class="header-container">
+  <img src="/logo.png" alt="Logo" class="logo" />
+
+  <div class="search-filter-container">
+    <app-search-box
+      [filters]="filters"
+      (toggleFilters)="toggleFilters()"
+    ></app-search-box>
+
+    <app-filter
+      *ngIf="showFilters"
+      (filtersChange)="onFiltersChanged($event)"
+    ></app-filter>
+  </div>
+
+  <button mat-button color="primary" [routerLink]="['/home']" class="nav-button">
+    Home
+  </button>
+
+  <div class="user-section" *ngIf="loginService.isLoggedIn()">
+    <app-button-booking></app-button-booking>
+    <span class="welcome-msg">Welcome, {{ loginService.getUsername() }}</span>
+    <app-button-logout></app-button-logout>
+  </div>
+  
+  <app-button-login *ngIf="!loginService.isLoggedIn()"></app-button-login>
+</header>

@@ -1,0 +1,30 @@
+.filter-container {
+  margin-top: 10px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.apply-button {
+  background-color: #000;  
+  color: #fff;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 8px 20px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #333;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.5);
+  }
+}
+
+

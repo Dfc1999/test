@@ -1,0 +1,41 @@
+<div class="booking-form-overlay">
+  <div class="booking-form-container">
+    <h2>Booking Details</h2>
+    <div *ngFor="let roomId of objectKeys(roomSelections)">
+      <p *ngIf="roomSelections[roomId] > 0">Room ID: {{ roomId }} - Quantity: {{ roomSelections[roomId] }}</p>
+    </div>
+
+    <p>Check-in: {{ checkIn | date:'mediumDate' }}</p>
+    <p>Check-out: {{ checkOut | date:'mediumDate' }}</p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput [formControl]="usernameControl" />
+      <mat-error *ngIf="usernameControl.invalid">Username is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [formControl]="emailControl" />
+      <mat-error *ngIf="emailControl.invalid">A valid email is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Phone</mat-label>
+      <input matInput [formControl]="phoneControl" />
+      <mat-error *ngIf="phoneControl.invalid">A valid phone number is required</mat-error>
+    </mat-form-field>
+
+    <div class="booking-buttons">
+      <button mat-raised-button color="accent" (click)="onSubmit()" [disabled]="!isFormValid()">Confirm Booking</button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+    </div>
+
+    <div class="confirmation-message" *ngIf="showConfirmation">
+      <mat-icon color="primary">check_circle</mat-icon>
+      <p>Booking confirmed successfully!</p>
+      <button mat-button color="primary" (click)="closeConfirmation()">OK</button>
+    </div>
+
+  </div>
+</div>

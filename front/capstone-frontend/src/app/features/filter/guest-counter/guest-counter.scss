@@ -1,0 +1,16 @@
+.guest-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .count-input {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+  }
+}
+
+

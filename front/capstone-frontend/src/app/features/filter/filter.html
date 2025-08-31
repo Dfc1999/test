@@ -1,0 +1,13 @@
+<div class="filter-container">
+  <app-guest-counter [(guests)]="draftFilters.guests"></app-guest-counter>
+  <app-date-picker
+    [(checkIn)]="draftFilters.checkIn"
+    [(checkOut)]="draftFilters.checkOut"
+  ></app-date-picker>
+  <app-location-select [(location)]="draftFilters.location"></app-location-select>
+  <app-range-price [(priceRange)]="draftFilters.priceRange"></app-range-price>
+
+  <button mat-raised-button color="black" class="apply-button" (click)="applyFilters()">
+    Apply Filters
+  </button>
+</div>

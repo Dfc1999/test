@@ -1,0 +1,53 @@
+<div class="login-container">
+
+  <img src="logo.png" alt="Logo" class="logo" />
+
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
+
+    <h2>Login</h2>
+
+    <input
+      name="username"
+      type="text"
+      placeholder="Username"
+      [(ngModel)]="username"
+      #usernameRef="ngModel"
+      required
+      minlength="3"
+      class="input-field"
+    />
+    <div class="error">
+      <small *ngIf="usernameRef.touched && usernameRef.errors?.['required']">Username is required</small>
+      <small *ngIf="usernameRef.touched && usernameRef.errors?.['minlength']">Minimum 3 characters</small>
+    </div>
+
+    <input
+      name="password"
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+      #passwordRef="ngModel"
+      required
+      minlength="8"
+      class="input-field"
+    />
+    <div class="error">
+      <small *ngIf="passwordRef.touched && passwordRef.errors?.['required']">Password is required</small>
+      <small *ngIf="passwordRef.touched && passwordRef.errors?.['minlength']">Minimum 8 characters</small>
+      <ng-container *ngIf="passwordRef.touched && passwordErrors.length > 0">
+        <small *ngFor="let err of passwordErrors">{{ err }}</small>
+      </ng-container>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid" class="btn-login">
+      Sign In
+    </button>
+
+    <div *ngIf="loginError" class="login-error">
+      {{ loginError }}
+    </div>
+
+  </form>
+
+</div>
+
