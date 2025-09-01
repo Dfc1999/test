@@ -1,16 +1,23 @@
 import { Routes } from '@angular/router';
 import { HomePage } from './features/home-page/home-page';
-import { LoginComponent } from './core/pages/login/login';
-import { HotelDetailPage } from './features/hotel-detail-page/hotel-detail-page';
-import { NotFound } from './features/not-found/not-found';
-import { BookingPage } from './features/booking-page/booking-page';
-
 
 export const routes: Routes = [
   { path: '', component: HomePage },
   { path: 'home', component: HomePage },
-  { path: 'login', component: LoginComponent },
-  { path: 'hotel/:id', component: HotelDetailPage },
-  { path: 'bookings', component: BookingPage },
-  { path: '**', component: NotFound }
+  {
+    path: 'login',
+    loadComponent: () => import('./core/pages/login/login').then(mod => mod.LoginComponent)
+  },
+  {
+    path: 'hotel/:id',
+    loadComponent: () => import('./features/hotel-detail-page/hotel-detail-page').then(mod => mod.HotelDetailPage)
+  },
+  {
+    path: 'bookings',
+    loadComponent: () => import('./features/booking-page/booking-page').then(mod => mod.BookingPage)
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found').then(mod => mod.NotFound)
+  }
 ];

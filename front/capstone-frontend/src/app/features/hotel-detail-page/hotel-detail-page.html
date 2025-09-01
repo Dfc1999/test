@@ -69,20 +69,23 @@
     </ng-template>
 
     <div class="action-buttons">
-      <button mat-raised-button color="primary" [disabled]="!isAnyRoomSelected() || !checkIn || !checkOut" (click)="openBookingForm()">
+      <button mat-raised-button color="primary" [disabled]="!isAnyRoomSelected() || !checkIn || !checkOut" #proceedButton>
         Proceed with Booking
       </button>
-    </div>
+    </div>  
 
-    <app-booking-form
-      *ngIf="showBookingForm"
-      [hotelId]="hotel?._id"
-      [roomSelections]="roomSelections"
-      [checkIn]="checkIn"
-      [checkOut]="checkOut"
-      (bookingCompleted)="onBookingCompleted()"
-      (bookingCancelled)="onBookingCancelled()"
-    ></app-booking-form>
+    @defer (on interaction(proceedButton)) {
+      <app-booking-form
+        [hotelId]="hotel?._id"
+        [roomSelections]="roomSelections"
+        [checkIn]="checkIn"
+        [checkOut]="checkOut"
+        (bookingCompleted)="onBookingCompleted()"
+        (bookingCancelled)="onBookingCancelled()"
+      ></app-booking-form>
+    } @placeholder {
+      <p>Loading booking form...</p>
+    }
 
 
     <div class="booking-section">

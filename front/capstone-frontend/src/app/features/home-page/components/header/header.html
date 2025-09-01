@@ -4,13 +4,14 @@
   <div class="search-filter-container">
     <app-search-box
       [filters]="filters"
-      (toggleFilters)="toggleFilters()"
+      #filterTrigger
     ></app-search-box>
 
-    <app-filter
-      *ngIf="showFilters"
-      (filtersChange)="onFiltersChanged($event)"
-    ></app-filter>
+    @defer (on interaction(filterTrigger)) {
+      <app-filter
+        (filtersChange)="onFiltersChanged($event)"
+      ></app-filter>
+    }
   </div>
 
   <button mat-button color="primary" [routerLink]="['/home']" class="nav-button">

@@ -26,16 +26,10 @@ export class Header implements OnInit {
     }
   }
 
-  toggleFilters() {
-    this.showFilters = !this.showFilters;
-  }
-
   @Output() filtersChange = new EventEmitter<any>();
-
 
   onFiltersChanged(filters: any) {
     this.filters = filters;
-    this.showFilters = false;
     this.filtersChange.emit(filters);
   }
 
