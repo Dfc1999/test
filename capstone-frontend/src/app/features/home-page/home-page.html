@@ -1,0 +1,15 @@
+<main class="home-main-content">
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="hotel-grid" *ngIf="!errorMessage">
+    <app-hotel-card
+      *ngFor="let hotel of hotels"
+      [id]="hotel.id"
+      [name]="hotel.name"
+      [location]="hotel.location"
+      [imageUrl]="hotel.imageUrl"
+      [rating]="hotel.rating"
+    ></app-hotel-card>
+  </div>
+</main>
+
