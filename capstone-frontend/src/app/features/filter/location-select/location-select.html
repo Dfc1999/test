@@ -1,6 +1,0 @@
-<mat-form-field appearance="fill">
-  <mat-label>Location</mat-label>
-  <mat-select [value]="location" (selectionChange)="onLocationChange($event.value)">
-    <mat-option *ngFor="let loc of locations" [value]="loc">{{ loc }}</mat-option>
-  </mat-select>
-</mat-form-field>

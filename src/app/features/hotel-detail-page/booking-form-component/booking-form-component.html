@@ -1,0 +1,60 @@
+<div class="booking-form-overlay">
+  <div class="booking-form-container">
+    <h2>Booking Details</h2>
+
+    <div class="room-summary">
+      <strong>Rooms Selected:</strong> {{ roomIds.length }}
+    </div>
+
+    <p><strong>Check-in:</strong> {{ checkIn | date:'mediumDate' }}</p>
+    <p><strong>Check-out:</strong> {{ checkOut | date:'mediumDate' }}</p>
+    <p><strong>Guests:</strong> {{ guests }}</p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput [formControl]="usernameControl" />
+      @if (usernameControl.invalid) {
+        <mat-error>Username is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [formControl]="emailControl" />
+      @if (emailControl.invalid) {
+        <mat-error>A valid email is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Phone</mat-label>
+      <input matInput [formControl]="phoneControl" />
+      @if (phoneControl.invalid) {
+        <mat-error>A valid phone number is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="booking-buttons">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="onSubmit()"
+        [disabled]="!isFormValid()"
+      >
+        Confirm Booking
+      </button>
+      <button mat-raised-button color="warn" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (confirmationData) {
+  <app-confirmation-message
+    [message]="confirmationData.message"
+    [type]="confirmationData.type"
+    (closed)="closeConfirmation()"
+  >
+  </app-confirmation-message>
+}
