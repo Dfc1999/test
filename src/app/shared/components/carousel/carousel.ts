@@ -11,9 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './carousel.scss'
 })
 export class Carousel implements OnInit, OnDestroy {
-  @Input() images: any[] | null = null;
+  @Input() images: CarouselImage[] | null = null;
   currentSlide = 0;
-  autoSlideInterval: any;
+  private autoSlideInterval: number | undefined;
 
   ngOnInit() {
     this.autoSlideInterval = setInterval(() => this.nextSlide(), 4000);
@@ -33,4 +33,8 @@ export class Carousel implements OnInit, OnDestroy {
       this.currentSlide =
         (this.currentSlide - 1 + this.images.length) % this.images.length;
   }
+}
+
+export interface CarouselImage {
+  url: string;
 }

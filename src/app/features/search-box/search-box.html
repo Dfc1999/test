@@ -12,14 +12,23 @@
 
   <mat-form-field appearance="fill" class="search-field date-field">
     <mat-label>Check-in</mat-label>
-    <input matInput [matDatepicker]="checkinPicker" formControlName="checkIn">
+    <input 
+      matInput 
+      [matDatepicker]="checkinPicker" 
+      formControlName="checkIn"
+      [min]="today"  
+      [max]="searchForm.value.checkOut"> 
     <mat-datepicker-toggle matSuffix [for]="checkinPicker"></mat-datepicker-toggle>
     <mat-datepicker #checkinPicker></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="search-field date-field">
     <mat-label>Check-out</mat-label>
-    <input matInput [matDatepicker]="checkoutPicker" formControlName="checkOut">
+    <input 
+      matInput 
+      [matDatepicker]="checkoutPicker" 
+      formControlName="checkOut"
+      [min]="searchForm.value.checkIn"> 
     <mat-datepicker-toggle matSuffix [for]="checkoutPicker"></mat-datepicker-toggle>
     <mat-datepicker #checkoutPicker></mat-datepicker>
   </mat-form-field>

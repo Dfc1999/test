@@ -1,16 +1,17 @@
 <header class="header-container">
   <img src="/logo.png" alt="Logo" class="logo" />
 
-  <div class="spacer"></div> <button mat-button color="primary" [routerLink]="['/home']" class="nav-button">
+  <div class="spacer"></div>
+  
+  <button mat-button [routerLink]="['/home']" class="nav-button">
     Home
   </button>
 
   @if (loginService.isLoggedIn()) {
-    <div class="user-section">
-      <app-button-booking></app-button-booking>
-      <span class="welcome-msg">Welcome, {{ loginService.getUsername() }}</span>
-      <app-button-logout></app-button-logout>
-    </div>
+    <app-user-menu 
+      [username]="loginService.getUsername()" 
+      (logoutClicked)="logout()">
+    </app-user-menu>
   } @else {
     <app-button-login></app-button-login>
   }

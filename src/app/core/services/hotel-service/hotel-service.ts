@@ -8,12 +8,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class HotelService {
   private apiUrl = 'http://localhost:3000/hotels';
 
-  private filtersSource = new BehaviorSubject<any>(null);
+  private filtersSource = new BehaviorSubject<SearchFilters | null>(null);
   public filters$ = this.filtersSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  updateFilters(filters: any) {
+  updateFilters(filters: SearchFilters) {
     this.filtersSource.next(filters);
   }
 
@@ -43,12 +43,7 @@ export class HotelService {
     return this.http.get<DetailedRoom[]>(`${this.apiUrl}/${hotelId}/availability/${roomType}`, { params });
   }
 
-  searchHotels(filters: {
-    persons: number,
-    location?: string,
-    checkIn?: Date,
-    checkOut?: Date
-  }): Observable<any[]> {
+  searchHotels(filters: SearchFilters): Observable<HotelSearchResult[]> {
     let params = new HttpParams().set('persons', filters.persons.toString());
     
     if (filters.location) {
@@ -61,7 +56,7 @@ export class HotelService {
       params = params.set('checkOut', filters.checkOut.toISOString());
     }
 
-    return this.http.get<any[]>(`${this.apiUrl}/search/rooms`, { params });
+    return this.http.get<HotelSearchResult[]>(`${this.apiUrl}/search/rooms`, { params });
   }
 }
 
@@ -77,7 +72,7 @@ export interface Hotel {
   description: string;
   images: { url: string }[];
   amenities?: string[];
-  rooms?: any[];
+  rooms?: DetailedRoom[];
 }
 
 export interface RoomSummary {
@@ -94,4 +89,23 @@ export interface DetailedRoom {
   capacity: number;
   price: number;
   description: string;
+}
+
+export interface SearchFilters {
+  location: string;
+  checkIn: Date | null;
+  checkOut: Date | null;
+  persons: number;
+}
+
+export interface HotelSearchResult {
+  hotelId: string;
+  hotelName: string;
+  hotelLocation: {
+    city: string;
+    province: string;
+    country: string;
+  };
+  images: { url: string }[];
+  starRating: number;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,10 +11,10 @@ export class LoginService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(username: string, password: string) {
-    return this.http.post<any>(`${this.apiUrl}/login`, { username, user_password: password })
+  login(username: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, user_password: password })
       .pipe(
-        tap((res) => {
+        tap((res: AuthResponse) => {
           if (res.accessToken) {
             localStorage.setItem('accessToken', res.accessToken);
             localStorage.setItem('username', username);
@@ -23,7 +23,7 @@ export class LoginService {
       );
   }
 
-  logout() {
+  logout(): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
         localStorage.removeItem('accessToken');
@@ -41,7 +41,11 @@ export class LoginService {
     return localStorage.getItem('username');
   }
 
-  refreshToken() {
-    return this.http.post(`${this.apiUrl}/refresh-token`, {}, { withCredentials: true });
+  refreshToken(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh-token`, {}, { withCredentials: true });
   }
+}
+
+export interface AuthResponse {
+  accessToken: string;
 }

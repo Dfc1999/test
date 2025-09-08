@@ -27,7 +27,8 @@ export interface Booking {
   _id: string;
   hotelId: string;
   guestId: string;
-  username: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   checkInDate: string | Date;
@@ -42,7 +43,8 @@ export interface Booking {
 
 export interface BookingPayload {
   hotelId: string;
-  username: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   roomIds: string[];

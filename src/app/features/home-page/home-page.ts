@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HotelService, Hotel } from '../../core/services/hotel-service/hotel-service';
+import { HotelService, Hotel, SearchFilters, HotelSearchResult } from '../../core/services/hotel-service/hotel-service';
 import { HotelCard } from '../card-hotel/card-hotel';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { SearchBox } from '../search-box/search-box';
-import { Carousel } from '../hotel-detail-page/carousel/carousel';
+import { Carousel, CarouselImage } from '../../shared/components/carousel/carousel';
 
 @Component({
   selector: 'app-home-page',
@@ -19,13 +19,13 @@ import { Carousel } from '../hotel-detail-page/carousel/carousel';
   standalone: true
 })
 export class HomePage implements OnInit, OnDestroy {
-  carouselImages = [
+  carouselImages: CarouselImage[] = [
     { url: 'https://placehold.co/1920x600/000000/FFFFFF?text=Luxury+Hotel' },
     { url: 'https://placehold.co/1920x600/333333/FFFFFF?text=City+View' },
     { url: 'https://placehold.co/1920x600/555555/FFFFFF?text=Tropical+Paradise' }
   ];
 
-  hotels: any[] = [];
+  hotels: HotelForCard[] = [];
   errorMessage = '';
   private destroy$ = new Subject<void>();
 
@@ -43,12 +43,12 @@ export class HomePage implements OnInit, OnDestroy {
       });
   }
   
-  handleSearch(filters: any): void {
+  handleSearch(filters: SearchFilters): void {
     this.hotelService.updateFilters(filters);
   }
 
-  private transformHotelData(hotel: any): any {
-    const isSearchResult = !!hotel.hotelId;
+  private transformHotelData(hotel: Hotel | HotelSearchResult): HotelForCard {
+    const isSearchResult = 'hotelId' in hotel; // Type guard
     return {
       id: isSearchResult ? hotel.hotelId : hotel._id,
       name: isSearchResult ? hotel.hotelName : hotel.name,
@@ -73,20 +73,15 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  searchWithFilters(filters: any) {
+  searchWithFilters(filters: SearchFilters) {
     if (!filters.persons || filters.persons <= 0) {
       this.errorMessage = 'The number of guests must be at least 1.';
       this.hotels = [];
       return;
     }
 
-    this.hotelService.searchHotels({
-      persons: filters.persons,
-      location: filters.location,
-      checkIn: filters.checkIn,
-      checkOut: filters.checkOut
-    }).subscribe({
-      next: (results: any[]) => {
+    this.hotelService.searchHotels(filters).subscribe({
+      next: (results: HotelSearchResult[]) => {
         this.errorMessage = '';
         if (results.length === 0) {
           this.errorMessage = 'No hotels were found with the applied filters.';
@@ -106,4 +101,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+}
+
+interface HotelForCard {
+  id: string;
+  name: string;
+  location: string;
+  imageUrl: string;
+  rating: number;
 }

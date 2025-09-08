@@ -1,124 +1,30 @@
 @if (hotel(); as hotelData) {
   <div class="hotel-detail-container">
+    
     <app-carousel [images]="hotelData.images"></app-carousel>
 
-    <section class="hotel-info">
-      <div class="hotel-header">
-        <h1>{{ hotelData.name }}</h1>
-        <div class="stars">
-          @for (star of [].constructor(hotelData.starRating); track $index) {
-            <mat-icon>star</mat-icon>
-          }
-        </div>
-      </div>
-      <p class="location">
-        <mat-icon>location_on</mat-icon>
-        {{ hotelData.location.city }}, {{ hotelData.location.country }}
-      </p>
-      <h2>About this hotel</h2>
-      <p class="description">
-        {{ hotelData.description | fallbackPipe:'No description available' }}
-      </p>
-      @if (hotelData.amenities) {
-        <h2>Amenities</h2>
-        <div class="amenities">
-          @for (amenity of hotelData.amenities; track amenity) {
-            <span>
-              <mat-icon color="primary">check_circle</mat-icon>
-              {{ amenity }}
-            </span>
-          }
-        </div>
-      }
-    </section>
+    <app-hotel-info [hotel]="hotelData"></app-hotel-info>
 
-    <section class="date-updater">
-      <h3>Check Availability</h3>
-      <form [formGroup]="dateForm" (ngSubmit)="loadHotelAndAvailability()" class="date-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Check-in</mat-label>
-          <input matInput [matDatepicker]="pickerIn" formControlName="checkIn">
-          <mat-datepicker-toggle matSuffix [for]="pickerIn"></mat-datepicker-toggle>
-          <mat-datepicker #pickerIn></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Check-out</mat-label>
-          <input matInput [matDatepicker]="pickerOut" formControlName="checkOut">
-          <mat-datepicker-toggle matSuffix [for]="pickerOut"></mat-datepicker-toggle>
-          <mat-datepicker #pickerOut></mat-datepicker>
-        </mat-form-field>
-        <button mat-flat-button color="primary" type="submit">Apply Changes</button>
-      </form>
-    </section>
+    <app-availability-form 
+      [dateForm]="dateForm" 
+      (searchAvailability)="loadHotelAndAvailability()">
+    </app-availability-form>
 
-    <section class="availability-section">
-      <h2>Available Rooms</h2>
-      @if (isLoading()) {
-        <p>Loading availability...</p>
-      } @else {
-        @if (!selectedRoomType()) {
-          @if (roomSummary().length > 0) {
-            <div class="rooms-grid">
-              @for (summary of roomSummary(); track summary.type) {
-                <mat-card class="room-summary-card">
-                  <mat-card-header>
-                    <mat-card-title>{{ summary.type | capitalizePipe }}</mat-card-title>
-                    <mat-card-subtitle>{{ summary.availableCount }} available</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <p>From {{ summary.price | pricePipe }} / night</p>
-                  </mat-card-content>
-                  <mat-card-actions>
-                    <button mat-button color="primary" (click)="viewRoomDetails(summary.type)">VIEW ROOMS</button>
-                  </mat-card-actions>
-                </mat-card>
-              }
-            </div>
-          } @else {
-            <p>No rooms available for the selected dates. Please try other dates.</p>
-          }
-        } @else {
-          <div class="detailed-view">
-            <button mat-stroked-button (click)="backToSummary()">
-              <mat-icon>arrow_back</mat-icon>
-              Back to Summary
-            </button>
-            <h3>{{ selectedRoomType()! | capitalizePipe }} Rooms</h3>
-            <div class="rooms-grid">
-              @for (room of detailedRooms(); track room._id) {
-                <mat-card class="detailed-room-card" [class.selected]="isSelected(room._id)">
-                  <mat-card-header>
-                    <mat-card-title>Room {{ room.roomNumber }}</mat-card-title>
-                    <mat-card-subtitle>{{ room.beds }} beds, for {{ room.capacity }} guests</mat-card-subtitle>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <p>{{ room.description }}</p>
-                    <p class="price">{{ room.price | pricePipe }} / night</p>
-                  </mat-card-content>
-                  <mat-card-actions>
-                    <button mat-stroked-button (click)="toggleRoomSelection(room._id)">
-                      {{ isSelected(room._id) ? 'DESELECT' : 'SELECT' }}
-                    </button>
-                  </mat-card-actions>
-                </mat-card>
-              }
-            </div>
-          </div>
-        }
-      }
-    </section>
+    <app-room-availability
+      [isLoading]="isLoading"
+      [roomSummary]="roomSummary"
+      [detailedRooms]="detailedRooms"
+      [selectedRoomType]="selectedRoomType"
+      [isRoomSelected]="isSelected.bind(this)"
+      (viewDetails)="viewRoomDetails($event)"
+      (back)="backToSummary()"
+      (toggleSelection)="toggleRoomSelection($event)">
+    </app-room-availability>
 
-    @if (selectedRoomIds().length > 0) {
-      <div class="selection-summary">
-        <div class="selection-info">
-          <h3>Your Selection</h3>
-          <p>{{ selectedRoomIds().length }} room(s) selected.</p>
-        </div>
-        <button mat-raised-button color="primary" (click)="showBookingForm.set(true)">
-          Proceed with Booking
-        </button>
-      </div>
-    }
+    <app-booking-summary
+      [selectedRoomCount]="selectedRoomCount"
+      (proceed)="showBookingForm.set(true)">
+    </app-booking-summary>
 
     @if (showBookingForm()) {
       <app-booking-form
@@ -128,8 +34,8 @@
         [checkIn]="dateForm.value.checkIn"
         [checkOut]="dateForm.value.checkOut"
         (bookingCompleted)="onBookingCompleted()"
-        (bookingCancelled)="showBookingForm.set(false)"
-      ></app-booking-form>
+        (bookingCancelled)="showBookingForm.set(false)">
+      </app-booking-form>
     }
   </div>
 }

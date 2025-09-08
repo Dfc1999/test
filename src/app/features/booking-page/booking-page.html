@@ -10,7 +10,7 @@
       @for (booking of bookings; track booking._id) {
         <mat-card class="booking-card">
           <mat-card-header>
-            <mat-card-title>{{ booking.username }}</mat-card-title>
+            <mat-card-title>{{ booking.firstName }} {{ booking.lastName }}</mat-card-title>
             <mat-card-subtitle>
               Status:
               <span [ngClass]="booking.status">{{ booking.status }}</span>

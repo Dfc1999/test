@@ -1,30 +1,30 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HotelService, RoomSummary, DetailedRoom, Hotel } from '../../core/services/hotel-service/hotel-service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatCardModule } from '@angular/material/card';
-import { PricePipe } from '../../shared/pipes/price-pipe-pipe';
-import { CapitalizePipe } from '../../shared/pipes/capitalize-pipe-pipe';
-import { FallbackPipe } from '../../shared/pipes/fallback-pipe-pipe';
-import { BookingFormComponent } from './booking-form-component/booking-form-component';
-import { Carousel } from './carousel/carousel';
+import { BookingFormComponent } from './components/booking-form-component/booking-form-component';
+import { Carousel } from '../../shared/components/carousel/carousel';
+import { HotelInfo } from './components/hotel-info/hotel-info';
+import { AvailabilityForm } from './components/availability-form/availability-form';
+import { RoomAvailability } from './components/room-availability/room-availability';
+import { BookingSummary } from './components/booking-summary/booking-summary';
 import { take, forkJoin, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-hotel-detail',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, MatIconModule, MatButtonModule, MatDatepickerModule,
-    MatFormFieldModule, MatInputModule, MatNativeDateModule, MatCardModule,
-    PricePipe, CapitalizePipe, FallbackPipe,
-    BookingFormComponent, Carousel
+    ReactiveFormsModule,
+    BookingFormComponent,
+    Carousel, 
+    HotelInfo, 
+    AvailabilityForm, 
+    RoomAvailability, 
+    BookingSummary,
+    HotelInfo,
+    AvailabilityForm,
+    RoomAvailability,
+    BookingSummary
   ],
   templateUrl: './hotel-detail-page.html',
   styleUrls: ['./hotel-detail-page.scss'],
@@ -42,8 +42,12 @@ export class HotelDetailPage implements OnInit {
 
   guests = signal(1);
   selectedRoomIds = signal<string[]>([]);
+
+  selectedRoomCount = computed(() => this.selectedRoomIds().length);
+
   showBookingForm = signal(false);
 
+  
   dateForm = this.fb.group({
     checkIn: [null as Date | null, Validators.required],
     checkOut: [null as Date | null, Validators.required]
